@@ -15,7 +15,7 @@ const urlsToCache = [
   "./umbulmanten.html",
   "./umbulponggok.html",
   "./umbulsigedang.html",
-  "./images/logoumkla.png"
+  "./images/logoumkla.png",
 ];
 
 // Event Install - Dijalankan saat SW pertama kali diinstall
