@@ -4,11 +4,9 @@
 const CACHE_NAME = "umkla-cache-v1";
 
 // Daftar file yang perlu di-cache untuk akses offline
-const urlsToCache = [
-  "./", 
+const urlsToCache = [ 
   "./app.js",
   "./index.html",
-  "./offline.html",
   "./umbulbesuki.html",
   "./umbulbrintik.html",
   "./umbulcokro.html",
@@ -33,18 +31,22 @@ self.addEventListener("fetch", event => {
     caches.match(event.request)
       .then(cachedResponse => {
         // Jika ada di cache, gunakan versi cache
-        // Jika tidak ada, ambil dari server
-        return cachedResponse || fetch(event.request)
-          .catch(() => {
-            // Jika offline, tampilkan halaman offline
-            if(event.request.mode === 'navigate') {
-              return caches.match('./offline.html');
-            }
-            // Untuk gambar, tampilkan logo default
-            if(event.request.destination === 'image') {
-              return caches.match('./images/logoumkla.png');
-            }
+        if (cachedResponse) return cachedResponse;
+
+        // Jika tidak ada, coba ambil dari server
+        return fetch(event.request).catch(() => {
+          // Jika offline dan request gambar, tampilkan logo default
+          if (event.request.destination === 'image') {
+            return caches.match('/PWM3SW/images/logoumkla.png');
+          }
+
+          // Selain gambar, abaikan error (tidak tampilkan fallback)
+          return new Response('', {
+            status: 503,
+            statusText: 'Offline - resource not available in cache'
           });
+        });
       })
   );
 });
+
