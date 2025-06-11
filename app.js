@@ -13,12 +13,13 @@ async function registerSW() {
       // Monitor status koneksi
       window.addEventListener('online', () => {
         console.log('Aplikasi kembali online');
-        window.location.href = './index.html';
+        // Tidak perlu redirect
       });
 
       window.addEventListener('offline', () => {
         console.log('Aplikasi offline');
-        window.location.href = './offline.html';
+        // Tidak redirect ke offline.html
+        // Bisa tambahkan notifikasi jika ingin
       });
 
     } catch (error) {
@@ -27,10 +28,10 @@ async function registerSW() {
       showResult("Error saat mendaftarkan: " + error.message);
     }    
   } else {
-      // Tampilkan pesan jika browser tidak mendukung Service Worker
-      showResult("Browser tidak mendukung Service Worker");
+    // Tampilkan pesan jika browser tidak mendukung Service Worker
+    showResult("Browser tidak mendukung Service Worker");
   }
-}; 
+}
 
 // Fungsi untuk menampilkan pesan hasil
 function showResult(text) {
