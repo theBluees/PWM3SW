@@ -1,57 +1,50 @@
-// Nama cache storage
-const CACHE_NAME = 'umkla-cache-v1';
+// Service Worker untuk PWA UmKla - Website Wisata Umbul Klaten
+// File ini mengatur caching dan offline functionality
 
-// File statis yang dicache untuk offline
+const CACHE_NAME = "umkla-cache-v1";
+
+// Daftar file yang perlu di-cache untuk akses offline
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/umbulbesuki.html',
-  '/umbulbrintik.html',
-  '/umbulcokro.html',
-  '/umbulmanten.html',
-  '/umbulponggok.html',
-  '/umbulsigedang.html',
-  '/images/logoumkla.png',
-  '/images/gambarhero.jpg',
-  '/images/ponggok.jpeg',
-  '/images/manten.jpeg',
-  '/images/sigedang.jpeg',
-  '/images/cokro.jpeg',
-  '/images/brintik.jpeg',
-  '/images/besuki.jpeg',
-  // tambahkan semua gambar galeri jika perlu
+  "./", 
+  "./app.js",
+  "./index.html",
+  "./offline.html",
+  "./umbulbesuki.html",
+  "./umbulbrintik.html",
+  "./umbulcokro.html",
+  "./umbulmanten.html",
+  "./umbulponggok.html",
+  "./umbulsigedang.html",
+  "./images/logoumkla.png"
 ];
 
-// Saat service worker ter-install
-self.addEventListener('install', event => {
-  // Precache semua file statis
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Service Worker: Precaching assets');
-        return cache.addAll(urlsToCache);
-      })
-  );
+// Event Install - Dijalankan saat SW pertama kali diinstall
+self.addEventListener("install", async event => {
+  // Buka cache dan tambahkan semua file yang diperlukan
+  const cache = await caches.open(CACHE_NAME);
+  console.log("Service Worker: Menyimpan file ke cache...");
+  await cache.addAll(urlsToCache);
 });
 
-// Saat service worker aktif
-self.addEventListener('activate', event => {
-  // Bersihkan cache lama jika ada
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.filter(name => name !== CACHE_NAME)
-                  .map(name => caches.delete(name))
-      );
-    })
-  );
-});
-
-// Tangani permintaan fetch (online dulu, fallback offline)
-self.addEventListener('fetch', event => {
+// Event Fetch - Dijalankan setiap kali browser meminta file
+self.addEventListener("fetch", event => {
   event.respondWith(
-    fetch(event.request).catch(() =>
-      caches.match(event.request).then(response => response || caches.match('/index.html'))
-    )
+    // Cek apakah file ada di cache
+    caches.match(event.request)
+      .then(cachedResponse => {
+        // Jika ada di cache, gunakan versi cache
+        // Jika tidak ada, ambil dari server
+        return cachedResponse || fetch(event.request)
+          .catch(() => {
+            // Jika offline, tampilkan halaman offline
+            if(event.request.mode === 'navigate') {
+              return caches.match('./offline.html');
+            }
+            // Untuk gambar, tampilkan logo default
+            if(event.request.destination === 'image') {
+              return caches.match('./images/logoumkla.png');
+            }
+          });
+      })
   );
 });
