@@ -18,8 +18,6 @@ async function registerSW() {
 
       window.addEventListener('offline', () => {
         console.log('Aplikasi offline');
-        // Tidak redirect ke offline.html
-        // Bisa tambahkan notifikasi jika ingin
       });
 
     } catch (error) {
