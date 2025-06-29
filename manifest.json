@@ -1,0 +1,23 @@
+{
+  "name": "Umbul Klaten",
+  "short_name": "UmKla",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#15803d",
+  "orientation": "portrait",
+  "description": "Wisata Air di Bumi Seribu Umbul – Klaten, Jawa Tengah.",
+  "lang": "id",
+  "icons": [
+    {
+      "src": "images/logoumkla.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/logoumkla.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
