@@ -17,8 +17,11 @@ async function registerSW() {
       });
 
       window.addEventListener("offline", () => {
-        console.log("Aplikasi offline");
-        window.location.href = "./offline.html";
+        document.getElementById("offline-notif").style.display = "block";
+      });
+
+      window.addEventListener("online", () => {
+        document.getElementById("offline-notif").style.display = "none";
       });
     } catch (error) {
       // Menampilkan pesan kesalahan jika pendaftaran gagal
